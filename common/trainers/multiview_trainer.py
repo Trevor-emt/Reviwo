@@ -86,17 +86,17 @@ class MultiViewViTTrainer(BaseTrainer):
         
         y = self.model.decode(z_v, z_l)
         
-        shuffle_indices = torch.randperm(self.camera_num)
-        shuffled_z_l = z_l.reshape(self.batch_size, self.camera_num, -1)[:, shuffle_indices, :].reshape(self.batch_size * self.camera_num, -1, z_l.shape[-1])
+        shuffle_indices = torch.randperm(camera_num)
+        shuffled_z_l = z_l.reshape(self.batch_size, camera_num, -1)[:, shuffle_indices, :].reshape(self.batch_size * camera_num, -1, z_l.shape[-1])
         y_shuffle_l = self.model.decode(z_v, shuffled_z_l)
         
         shuffled_indices_v = torch.randperm(self.batch_size)
-        shuffled_z_v = z_v.reshape(self.batch_size, self.camera_num, -1)[shuffled_indices_v, :, :].reshape(self.batch_size * self.camera_num, -1, z_v.shape[-1])
+        shuffled_z_v = z_v.reshape(self.batch_size, camera_num, -1)[shuffled_indices_v, :, :].reshape(self.batch_size * camera_num, -1, z_v.shape[-1])
         y_shuffle_v = self.model.decode(shuffled_z_v, z_l)
         y_shuffle_vl = self.model.decode(shuffled_z_v, shuffled_z_l)
 
-        normalized_z_l = normalize_tensor(z_l).reshape(self.batch_size, self.camera_num, -1)
-        normalized_z_v = normalize_tensor(z_v).reshape(self.batch_size, self.camera_num, -1)
+        normalized_z_l = normalize_tensor(z_l).reshape(self.batch_size, camera_num, -1)
+        normalized_z_v = normalize_tensor(z_v).reshape(self.batch_size, camera_num, -1)
         
         latent_contrastive_loss = 0
         view_contrastive_loss = 0
@@ -105,22 +105,22 @@ class MultiViewViTTrainer(BaseTrainer):
         contrastive_start_time = time.time()
         
         #### View Consistency
-        for j in range(self.camera_num):
+        for j in range(camera_num):
             for i in range(self.batch_size):
                 positive = sum([(compute_similarity(normalized_z_v[i, j], normalized_z_v[i_, j], dim=-1, way="cosine-similarity", lower_bound=lower_bound) / temperature).exp() for i_ in range(self.batch_size) if i_!=i])
                 
-                negative_state_idxs = [x for x in range(self.camera_num) if x!=j]
-                negative = (compute_similarity(normalized_z_v[i:i+1, j:j+1].repeat(self.batch_size, self.camera_num-1, 1), normalized_z_v[:, negative_state_idxs], dim=-1, way="cosine-similarity", lower_bound=lower_bound) / temperature).exp().sum()
+                negative_state_idxs = [x for x in range(camera_num) if x!=j]
+                negative = (compute_similarity(normalized_z_v[i:i+1, j:j+1].repeat(self.batch_size, camera_num-1, 1), normalized_z_v[:, negative_state_idxs], dim=-1, way="cosine-similarity", lower_bound=lower_bound) / temperature).exp().sum()
                 view_contrastive_loss -= (positive / (positive + negative)).log()
         
         
         #### Latent Consistency
         for i in range(self.batch_size):
-            for j in range(self.camera_num):
-                positive = sum([(compute_similarity(normalized_z_l[i, j], normalized_z_l[i, j_], dim=-1, way="cosine-similarity", lower_bound=lower_bound) / temperature).exp() for j_ in range(self.camera_num) if j_!=j])
+            for j in range(camera_num):
+                positive = sum([(compute_similarity(normalized_z_l[i, j], normalized_z_l[i, j_], dim=-1, way="cosine-similarity", lower_bound=lower_bound) / temperature).exp() for j_ in range(camera_num) if j_!=j])
                 
                 negative_state_idxs = [x for x in range(self.batch_size) if x!=i]
-                negative = (compute_similarity(normalized_z_l[i:i+1, j:j+1].repeat(self.batch_size-1, self.camera_num, 1), normalized_z_l[negative_state_idxs], dim=-1, way="cosine-similarity", lower_bound=lower_bound) / temperature).exp().sum()
+                negative = (compute_similarity(normalized_z_l[i:i+1, j:j+1].repeat(self.batch_size-1, camera_num, 1), normalized_z_l[negative_state_idxs], dim=-1, way="cosine-similarity", lower_bound=lower_bound) / temperature).exp().sum()
                 latent_contrastive_loss -= (positive / (positive + negative)).log()
                     
                 

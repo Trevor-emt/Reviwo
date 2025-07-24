@@ -1,0 +1,10 @@
+torch==2.1.0
+git+https://github.com/Farama-Foundation/Metaworld.git@documentation
+tensorboard
+matplotlib
+ruamel.yaml==0.17.0
+tqdm
+einops
+gymnasium
+numpy==1.26.4
+scikit-learn

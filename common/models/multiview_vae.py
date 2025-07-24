@@ -236,7 +236,7 @@ class MultiViewBetaVAE(nn.Module):
         # shuffled_rec_imgs_vl = rearrange(shuffled_xrec_vl, 'b c h w -> c h (b w)').contiguous()
         origin_imgs = rearrange(origin_imgs, 'b c h w -> c h (b w)').contiguous()
 
-        cat_imgs = torch.cat([origin_imgs, rec_imgs, shuffled_rec_imgs_v, shuffled_rec_imgs_l], dim=-2).cpu().numpy() # (B, C, 3*H, T*W)
+        cat_imgs = torch.cat([origin_imgs, rec_imgs, shuffled_rec_imgs_v, shuffled_rec_imgs_l], dim=-2).cpu().detach().numpy() # (B, C, 3*H, T*W)
         cat_imgs = ((cat_imgs + 1) * 127.5).clip(0, 255).astype(np.uint8)
         cat_imgs = cat_imgs.transpose(1, 2, 0)
 

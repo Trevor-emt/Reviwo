@@ -1,6 +1,7 @@
 defaults:
   # training config
   load_train_data_path: "./data/metaworld"
+  load_oxe_dir: "./data/openx"
   log_dir: none
   load_ckpt_path: none
 
@@ -8,7 +9,7 @@ defaults:
   batch_size: 8
   camera_num: 8
   loss_form: "Weighted_MSE"
-  fusion_style: "plus"
+  fusion_style: "cat"
   img_size: 128
   patch_size: 16
   seed: 42
@@ -40,7 +41,7 @@ defaults:
     n_tokens_per_frame: 256,
     n_layer: 8,
     n_head: 8,
-    n_embed: 128,
+    n_embed: 512,
     dropout: 0.1, 
     bias: False,
     mask_rate: 0
@@ -52,7 +53,7 @@ defaults:
     n_tokens_per_frame: 256,
     n_layer: 8,
     n_head: 8,
-    n_embed: 128,
+    n_embed: 512,
     dropout: 0.1, 
     bias: False,
     mask_rate: 0
@@ -60,11 +61,11 @@ defaults:
 
   decoder_config: {
     block_size: 256,
-    vocab_size: 512,
+    vocab_size: 1024,
     n_tokens_per_frame: 256,
     n_layer: 8,
     n_head: 8,
-    n_embed: 128,
+    n_embed: 512,
     dropout: 0.1, 
     bias: False,
     mask_rate: 0

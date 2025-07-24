@@ -3,7 +3,7 @@ import numpy as np
 import argparse
 import os
 import pickle
-import gymnasium as gym
+import gymnasium as gym1
 import sys
 project_dir = str(os.path.dirname(os.path.dirname(__file__)))
 sys.path.append(project_dir)
@@ -56,6 +56,9 @@ if __name__ == '__main__':
         print("Load the old camera config successfully!")
     
     for env_name in ALL_ENVIRONMENTS:
+        # test
+        # env_name = "door-close-v2"
+
         # if env_name == "shelf-place-v2":
         #     continue
         print(f"Start collect data for env {env_name}")
@@ -65,7 +68,7 @@ if __name__ == '__main__':
 
         args.env = env_name
     
-        env = gym.make("mw_" + env_name, 
+        env = gym1.make("mw_" + env_name, 
                        camera_ids=camera_ids,
                        camera_configs=camera_configs,
                        collect_data=True,

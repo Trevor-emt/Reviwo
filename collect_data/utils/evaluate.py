@@ -2,7 +2,7 @@ import collections
 import os
 from typing import Any, Dict, List
 
-import gym
+import gymnasium as gym
 import imageio
 import numpy as np
 import torch

@@ -1,5 +1,6 @@
 .vscode/
 logs/
 data/
+scripts/
 __pycache__
 token frequency.jpg

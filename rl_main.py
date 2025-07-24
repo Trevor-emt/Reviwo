@@ -126,7 +126,7 @@ def get_args():
     
     parser.add_argument("--single_camera", 
         type=bool, 
-        default=False,
+        default=True,
         help="Whether we only use camera_0 traj"
         )
     
@@ -179,7 +179,7 @@ def get_args():
     parser.add_argument("--load-dynamics-path", type=str, default=None)
 
     parser.add_argument("--epoch", type=int, default=5)
-    parser.add_argument("--step-per-epoch", type=int, default=5000)
+    parser.add_argument("--step-per-epoch", type=int, default=1000)
     parser.add_argument("--eval_episodes", type=int, default=30)
     parser.add_argument("--batch-size", type=int, default=256)
     parser.add_argument("--device", type=str, default="cuda" if torch.cuda.is_available() else "cpu")

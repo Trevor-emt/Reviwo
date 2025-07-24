@@ -155,7 +155,7 @@ def worker(process_id, env_name="button-press-v2"):
             print(f"Process {process_id} finish the {len(trajectory_list)}th trajectory for the {camera_id}th camera, the length is:", len(trajectory["state"]))
         
         ### Round 4
-        obs_env_names = [name[: -len("-goal-observable")] for name in ALL_V2_ENVIRONMENTS_GOAL_OBSERVABLE.keys()]
+        obs_env_names = [name[: -len("-goal-observable")] for name in ALL_V2_ENVIRONMENTS_GOAL_OBSERVABLE.keys() if name != "shelf-place-v2-goal-observable"]
         for i in range(args.non_expert_epoch):
             obs = env.reset()
             

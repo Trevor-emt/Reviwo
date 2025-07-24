@@ -11,7 +11,7 @@ import argparse
 
 def get_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--training_style", type=str, default="tokenizer", help="The implementation for training.", choices=["tokenizer"])
+    parser.add_argument("--training_style", type=str, default="tokenizer", help="The implementation for training.", choices=["tokenizer", "union_tokenizer"])
     return parser.parse_args()
 
 def pretrain_tokenizer(config, logger, use_deepspeed=False):
@@ -29,11 +29,29 @@ def pretrain_tokenizer(config, logger, use_deepspeed=False):
                                             )
     tokenizer_trainer.train()
 
+def pretrain_union_tokenizer(config, logger, use_deepspeed=False):
+    from common.trainers.union_trainer import UnionMultiViewViTTrainer
+
+    train_envs = common.ALL_ENVIRONMENTS
+    camera_id_dict, camera_config_dict = common.load_camera_id_config(config.load_train_data_path, train_envs)
+    
+    tokenizer_trainer = UnionMultiViewViTTrainer(config, 
+                                            train_envs, 
+                                            camera_id_dict, 
+                                            camera_config_dict, 
+                                            logger, 
+                                            use_deepspeed=use_deepspeed
+                                            )
+    tokenizer_trainer.train()
+
 def train(config, 
           training_style: str):
     if training_style == "tokenizer":
         log_dir = common.make_log_dirs("pretrain_tokenizer", config, [])
         train_func = pretrain_tokenizer
+    elif training_style == "union_tokenizer":
+        log_dir = common.make_log_dirs("pretrain_tokenizer", config, [])
+        train_func = pretrain_union_tokenizer
     else:
         raise NotImplementedError("Wrong training style!")
     

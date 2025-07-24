@@ -1,21 +1,39 @@
 # [ICLR 2025] Learning View-invariant World Models for Visual Robotic Manipulation
 
 ## 🔧 Python Environment Configuration
-1. Update the `prefix` parameter in `environment.yml`
-2. Build Python environment with following command
+1. Make sure you have installed mujoco-210.
+
+2. Create a conda env with:
 ```bash
-conda env create -f environment.yml
+conda create -n reviwo python=3.9
+conda activate reviwo
 ```
 
+3. Install the required packages with:
+```bash
+pip install -r requirements.txt
+```
+
+
+## 📊 Dataset and Checkpoint
+1. Download the OXE dataset and VIE's checkpoint from:[BaiduNetdisk]https://pan.baidu.com/s/11OHKx8fcqR0q4rwaXh7jog?pwd=g3at.  
+
+2. Put "model.pth" file into "/checkpoints/multiview_v0" in your local directory. Put "openx" file into "/data/openx" in your local directory.
+
 ## 🚀 View-invariant Encoder Training
-1. Collect the multi-view data from Metaworld with the following command, make sure you have installed mujoco, and we recommend using mujoco-210.
+1. Collect the multi-view data from Metaworld with the following command.
 ```bash
 python collect_data/collect_multi_view_data.py
 ```
 
-2. Train the view-invariant encoder by running, the configs of training is referred to path`configs/config.yaml`:
+2. Train the view-invariant encoder with the collected data from Metaworld by running the following code, the configs of training is referred to path`configs/config.yaml`.
 ```bash
-python tokenizer_main.py
+python tokenizer_main.py --training_style tokenizer
+```
+
+3. To train the view-invariant encoder with the collected data from Metaworld along with part of data from OXE, run the following command:
+```bash
+python tokenizer_main.py --training_style union_tokenizer
 ```
 
 ## 🦾 Running COMBO with the learnt view-invariant encoder
@@ -24,7 +42,7 @@ python tokenizer_main.py
 python collect_data/collect_world_model_training_data.py --env_name ${your_metaworld_env_name}
 ```
 
-2. Running COMBO with the following command. A self-trained checkpoint can be found in "checkpoints/multiview_v0/model.pth" with the default model config in "configs/config.yaml". We provide three settings for evaluation:
+2. Running COMBO with the following command. The default checkpoint is "checkpoints/multiview_v0/model.pth" with the default model config in "configs/config.yaml". We provide three settings for evaluation:
 * Training View: 
 ```bash
 python rl_main.py --env_name ${your_metaworld_env_name} --env_mode "normal"
