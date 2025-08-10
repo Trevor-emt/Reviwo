@@ -16,7 +16,7 @@ pip install -r requirements.txt
 
 
 ## 📊 Dataset and Checkpoint
-1. Download the OXE dataset and VIE's checkpoint from:[BaiduNetdisk]https://pan.baidu.com/s/11OHKx8fcqR0q4rwaXh7jog?pwd=g3at.  
+1. Download the OXE dataset and VIE's checkpoint from:[BaiduNetdisk]https://pan.baidu.com/s/16b6545CDnmKfjVi1PXkWsg?pwd=qd7p.  
 
 2. Put "model.pth" file into "/checkpoints/multiview_v0" in your local directory. Put "openx" file into "/data/openx" in your local directory.
 

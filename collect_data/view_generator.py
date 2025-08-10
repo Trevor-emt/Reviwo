@@ -32,7 +32,7 @@ def sample_distance(sample_num):
 def sample_elevation(sample_num):
     sampled_elevations = []
     for i in range(sample_num):
-        elevation = round(-random.random() * 10 - 20, 1)
+        elevation = round(-random.random() * 2 - 20, 1)
         sampled_elevations.append(elevation)
     return sampled_elevations
         
@@ -76,8 +76,12 @@ def world_model_training_view_generation():
         sampled_camera_configs.append(camera_config)
     return sampled_camera_configs
 
-def multi_view_generation(view_num):
-    sampled_distances = [1.3 for _ in range(view_num)]
+def multi_view_generation(view_num, seed=None):
+    if seed is not None:
+        random.seed(seed)
+    else:
+        random.seed(7)
+    sampled_distances = [1.5 for _ in range(view_num)]
     lookats = [np.array([0, 0.5, 0]) for _ in range(view_num)]
     sampled_azimuths = sample_azimuth(view_num)
     sampled_elevations = sample_elevation(view_num)
